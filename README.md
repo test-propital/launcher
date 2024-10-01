@@ -1,6 +1,6 @@
 ﻿# launcher
 
-![Diagrama de flujo]((https://github.com/tu_usuario/tu_repositorio/blob/main/tu_imagen.jpg](https://github.com/test-propital/launcher/blob/main/microservicios.drawio.png))
+![Diagrama de flujo](https://github.com/test-propital/launcher/blob/main/microservicios.drawio.png)
 
 ### Pasos para crear los Git Submodules
 
