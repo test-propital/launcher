@@ -1,0 +1,12 @@
+[submodule "api-gateway"]
+	path = api-gateway
+	url = https://github.com/test-propital/api-gateway.git
+[submodule "auth-ms"]
+	path = auth-ms
+	url = https://github.com/test-propital/auth-ms.git
+[submodule "assets-ms"]
+	path = assets-ms
+	url = https://github.com/test-propital/assets-ms.git
+[submodule "notification-ms"]
+	path = notification-ms
+	url = https://github.com/test-propital/notification-ms.git
