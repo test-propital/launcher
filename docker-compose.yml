@@ -31,6 +31,21 @@ services:
       - "3308:3306"
     volumes:
       - mysql_data:/var/lib/mysql
+    
+    # Configuración de postgres
+  postgres:
+    image: postgres:16.2
+    container_name: postgres_container
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=123456
+      - POSTGRES_DB=postgre
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: always
+
     # Configuración de Redis
   redis:
     image: redis:latest
@@ -69,10 +84,10 @@ services:
       - JWT_SECRET=estoDeberiaSerUnStringSeguro
 
 
-  notifications-ms:
-    build: ./notifications-ms
+  notification-ms:
+    build: ./notification-ms
     volumes:
-      - ./notifications-ms/src:/usr/src/app/src
+      - ./notification-ms/src:/usr/src/app/src
     depends_on:
       - nats-server
     command: npm run start:dev
@@ -92,10 +107,11 @@ services:
     environment:
       - PORT=3000
       - NAST_SERVERS=nats://nats-server:4222
-      - DATABASE_URL=mysql://user:password@mysql:3306/my_database
+      - DATABASE_URL=postgres://postgres:123456@postgres:5432/postgres
 
 
 volumes:
   mongo_data:
   mysql_data:
+  postgres_data:
   redis_data:
