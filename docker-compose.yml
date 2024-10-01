@@ -1,0 +1,101 @@
+services:
+  # Servidor NATS
+  nats-server:
+    image: nats:latest
+    ports:
+      - "8222:8222"
+      - "4222:4222"
+
+  # Configuración de MongoDB
+  mongodb:
+    image: mongo:6.0
+    container_name: mongo_container
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  # Configuración de MySQL
+  mysql:
+    image: mysql:8.0
+    container_name: mysql_container
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+      MYSQL_DATABASE: my_database
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - "3308:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    # Configuración de Redis
+  redis:
+    image: redis:latest
+    container_name: redis_container
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+
+
+
+  api-gateway:
+    build: ./api-gateway
+    ports:
+      - 3000:3000
+      - 3001:3001
+    volumes:
+      - ./api-gateway/src:/usr/src/app/src
+    command: npm run start:dev
+    environment:
+      - PORT=3000
+      - SOCKET_PORT=3001
+      - NAST_SERVERS=nats://nats-server:4222
+
+  auth-ms:
+    build: ./auth-ms
+    volumes:
+      - ./auth-ms/src:/usr/src/app/src
+    depends_on:
+      - nats-server
+    command: npm run start:dev
+    environment:
+      - PORT=3000
+      - NAST_SERVERS=nats://nats-server:4222
+      - DATABASE_URL=mongodb+srv://eduardopmx:20805694@freedbmongo.f8sknao.mongodb.net/AuthDb  #mongodb://root:example@mongodb:27017/AuthDb
+      - JWT_SECRET=estoDeberiaSerUnStringSeguro
+
+
+  notifications-ms:
+    build: ./notifications-ms
+    volumes:
+      - ./notifications-ms/src:/usr/src/app/src
+    depends_on:
+      - nats-server
+    command: npm run start:dev
+    environment:
+      - PORT=3000
+      - NAST_SERVERS=nats://nats-server:4222
+      - DATABASE_URL=mongodb+srv://eduardopmx:20805694@freedbmongo.f8sknao.mongodb.net/Notifications
+
+
+  assets-ms:
+    build: ./assets-ms
+    volumes:
+      - ./assets-ms/src:/usr/src/app/src
+    depends_on:
+      - nats-server
+    command: npm run start:dev
+    environment:
+      - PORT=3000
+      - NAST_SERVERS=nats://nats-server:4222
+      - DATABASE_URL=mysql://user:password@mysql:3306/my_database
+
+
+volumes:
+  mongo_data:
+  mysql_data:
+  redis_data:
