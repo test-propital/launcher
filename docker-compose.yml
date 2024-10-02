@@ -1,3 +1,4 @@
+version: '3'
 services:
   # Servidor NATS
   nats-server:
@@ -17,20 +18,6 @@ services:
       - "27017:27017"
     volumes:
       - mongo_data:/data/db
-
-  # Configuración de MySQL
-  mysql:
-    image: mysql:8.0
-    container_name: mysql_container
-    environment:
-      MYSQL_ROOT_PASSWORD: example
-      MYSQL_DATABASE: my_database
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
-    ports:
-      - "3308:3306"
-    volumes:
-      - mysql_data:/var/lib/mysql
     
     # Configuración de postgres
   postgres:
@@ -69,6 +56,7 @@ services:
       - PORT=3000
       - SOCKET_PORT=3001
       - NAST_SERVERS=nats://nats-server:4222
+      - REDIS_CLIENT=redis://redis_container:6379
 
   auth-ms:
     build: ./auth-ms
@@ -80,7 +68,7 @@ services:
     environment:
       - PORT=3000
       - NAST_SERVERS=nats://nats-server:4222
-      - DATABASE_URL=${MONGO_URI}/AuthDb #mongodb://root:example@mongodb:27017/AuthDb
+      - DATABASE_URL=${MONGO_URI_AUTH}
       - JWT_SECRET=estoDeberiaSerUnStringSeguro
 
 
@@ -94,7 +82,7 @@ services:
     environment:
       - PORT=3000
       - NAST_SERVERS=nats://nats-server:4222
-      - DATABASE_URL=${MONGO_URI}/Notifications
+      - DATABASE_URL=${MONGO_URI_NOTIFICATIONS}
 
 
   assets-ms:
@@ -112,6 +100,5 @@ services:
 
 volumes:
   mongo_data:
-  mysql_data:
   postgres_data:
   redis_data:
