@@ -2,39 +2,28 @@
 
 ![Diagrama de flujo](https://github.com/test-propital/launcher/blob/main/microservicios.drawio.png)
 
-### Pasos para crear los Git Submodules
+## Architecture Overview
 
+Esta es una aplicación de microservicios dividida en submódulos o que sigue un enfoque de repositorios múltiples (multi-repo). Cada servicio está aislado en su propio submódulo o repositorio individual, permitiendo un desarrollo y despliegue independiente.
 
-1. Crear un nuevo repositorio en GitHub
-2. Clonar el repositorio en la máquina local
-3. Añadir el submodule, donde `repository_url` es la url del repositorio y `directory_name` es el nombre de la carpeta donde quieres que se guarde el sub-módulo (no debe de existir en el proyecto)
-```
-git submodule add <repository_url> <directory_name>
-```
-4. Añadir los cambios al repositorio (git add, git commit, git push)
-Ej:
-```
-git add .
-git commit -m "Add submodule"
-git push
-```
-5. Inicializar y actualizar Sub-módulos, cuando alguien clona el repositorio por primera vez, debe de ejecutar el siguiente comando para inicializar y actualizar los sub-módulos
-```
-git submodule update --init --recursive
-```
-6. Para actualizar las referencias de los sub-módulos
-```
-git submodule update --remote
-```
+El proyecto incluye diferentes microservicios que se comunican entre sí mediante tecnologías como NATS para mensajería y Redis, que se utiliza específicamente para gestionar la persistencia y la conexión de websockets. Esta configuración permite una gestión eficiente de sesiones y mensajes en tiempo real dentro de la arquitectura distribuida. Cada servicio puede ser escalado, desplegado y mantenido de manera autónoma.
 
+## Tech Stack
 
-## Importante
-Si se trabaja en el repositorio que tiene los sub-módulos, **primero actualizar y hacer push** en el sub-módulo y **después** en el repositorio principal. 
+El stack tecnológico principal para esta aplicación de microservicios incluye:
 
-Si se hace al revés, se perderán las referencias de los sub-módulos en el repositorio principal y tendremos que resolver conflictos.
-
-
-
+- **Node.js**: Runtime JavaScript utilizado para construir el backend.
+- **NestJS**: Framework progresivo para aplicaciones Node.js, utilizado para la estructura y desarrollo de microservicios.
+- **Express**: Framework web minimalista utilizado en algunos servicios para manejar peticiones HTTP.
+- **Docker**: Para contenerizar los servicios y facilitar el despliegue.
+- **Kubernetes**: Orquestrador de contenedores utilizado para gestionar y escalar los microservicios.
+- **NATS**: Sistema de mensajería que permite la comunicación entre microservicios.
+- **Redis**: Usado para persistencia de datos en tiempo real y como un broker para websockets.
+- **PostgreSQL**: Base de datos relacional para el almacenamiento de datos estructurados.
+- **MongoDB**: Base de datos NoSQL utilizada para almacenar datos no estructurados.
+- **TypeScript**: Lenguaje de programación que extiende JavaScript con tipado estático.
+- **GCP (Google Cloud Platform)**: Proveedor de infraestructura en la nube utilizado para alojar y gestionar los microservicios en entornos de producción.
+ 
 ## dev
 
 1. clonar el repositorio
