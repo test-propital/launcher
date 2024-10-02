@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: auth-ms
+  name: auth-ms
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: auth-ms
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: auth-ms
+    spec:
+      containers:
+      - image: southamerica-east1-docker.pkg.dev/test-propital/image-register/auth-ms
+        name: auth-ms
+        env:
+        - name: PORT
+          value: "3000"
+        - name: NAST_SERVERS
+          value: "nats://nats"
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: mongodb
+              key: mongodb_auth
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+                name: jwt-secret
+                key: jwt
+        resources: {}
+status: {}

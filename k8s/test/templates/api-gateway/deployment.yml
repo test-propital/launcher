@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: api-gateway
+  name: api-gateway
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: api-gateway
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: api-gateway
+    spec:
+      containers:
+      - image: southamerica-east1-docker.pkg.dev/test-propital/image-register/api-gateway
+        name: api-gateway
+        env:
+        - name: PORT
+          value: "3000"
+        - name: SOCKET_PORT
+          value: "3001"
+        - name: NAST_SERVERS
+          value: "nats://nats"
+        - name: REDIS_CLIENT
+          value: "redis://redis"
+        resources: {}
+status: {}
